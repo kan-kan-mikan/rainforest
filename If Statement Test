@@ -1,0 +1,33 @@
+using UnityEngine;
+using System.Collections;
+
+public class LogNumber : MonoBehaviour {
+
+    public float teaTemperature = 99.0f;
+    public float hotLimitTemperature = 85.0f;
+    public float coldLimitTemperature = 60.0f;
+
+	
+	void Update () {
+        if (Input.GetKeyDown(KeyCode.Space))
+            TemperatureTest();
+
+        teaTemperature -= Time.deltaTime * 2f;
+      	}
+
+    void TemperatureTest()
+    {
+        if (teaTemperature > hotLimitTemperature)
+        {
+            Debug.Log("Tea is too hot.");
+        }
+        else if (teaTemperature < coldLimitTemperature)
+        {
+            Debug.Log("Tea is too cold.");
+        }
+        else
+        {
+            Debug.Log("Tea is just right.");
+        }
+    }
+}
