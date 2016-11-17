@@ -4,70 +4,151 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
 
-    public float maxSpeed = 200f;
-    public float speed = 200f;
-    public float jumpPower = 100f;
+    public float acceleration = 4f;
+    public float maxSpeed = 150f;
+    public float gravity = 6f;
+    public float maxfall = 200f;
+    public float jump = 200f;
 
-    public bool onGround;
+    int layerMask;
 
-    private Rigidbody2D player;
-    private Animator anim;
+    Rect box;
 
-	// Use this for initialization
-	void Start ()
+    Vector2 velocity;
+
+    bool grounded = false;
+    bool falling = false;
+
+    int horizontalRays = 6;
+    int verticalRays = 4;
+    int margin = 2;
+
+    void Start()
+    {
+        layerMask = LayerMask.NameToLayer("Collisions");
+    }
+
+    void FixedUpdate()
     {
 
-        player = gameObject.GetComponent<Rigidbody2D>();
-        anim = gameObject.GetComponent<Animator>();
+        //-----GRAVITY-----\\
 
-	}
+        BoxCollider2D boxCol = GetComponent<BoxCollider2D>();
+        box = new Rect(
+            boxCol.bounds.min.x,
+            boxCol.bounds.min.y,
+            boxCol.bounds.size.x,
+            boxCol.bounds.size.y
+            );
 
-    void Update ()
-    {
-
-        anim.SetBool("On Ground", onGround); //changes bool parameter in Animator based on onGround value
-        anim.SetFloat("Speed", Mathf.Abs(Input.GetAxis("Horizontal"))); //changes speed parameter in Animator to magnitude of speed
-
-        if ((Input.GetKeyUp(KeyCode.LeftArrow)) || (Input.GetKeyUp(KeyCode.RightArrow)) || (Input.GetKeyUp(KeyCode.A)) || (Input.GetKeyUp(KeyCode.D))) //stop players from moving if movement keys are not pressed
+        if (!grounded)
         {
-            player.velocity = new Vector2(0, player.velocity.y);
+            //add gravity to y speed with terminal velocity being maxfall
+            velocity = new Vector2(velocity.x, Mathf.Max(velocity.y - gravity, -maxfall));
         }
 
-        if(Input.GetAxis("Horizontal") < -0.1f) //flip sprite to the left when moving left
+        if (velocity.y < 0)
         {
+            falling = true;
+        }
 
-            transform.localScale = new Vector3(-1, 1, 1);
+        if (grounded || falling) //doesn't check if moving up in the air
+        {
+            Vector2 startPoint = new Vector2(box.xMax - margin, box.center.y);
+            Vector2 endPoint = new Vector2(box.xMin + margin, box.center.y);
+
+            //conditional operator checks if grounded true then use margin if false use movement distance
+            float distance = box.height / 2 + (grounded ? margin : Mathf.Abs(velocity.y * Time.deltaTime));
+
+            Debug.DrawRay(Vector2.Lerp(startPoint, endPoint, 0f), Vector2.down * distance, Color.red, 0, false);
+            Debug.DrawRay(Vector2.Lerp(startPoint, endPoint, 1f / 3f), Vector2.down * distance, Color.red, 0, false);
+            Debug.DrawRay(Vector2.Lerp(startPoint, endPoint, 2f / 3f), Vector2.down * distance, Color.red, 0, false);
+            Debug.DrawRay(Vector2.Lerp(startPoint, endPoint, 1f), Vector2.down * distance, Color.red, 0, false);
+
+            bool connected = false;
+
+            for (int i = 0; i < verticalRays; i++)
+            {
+                float lerpAmount = (float)i / (float) (verticalRays - 1);
+                Vector2 origin = Vector2.Lerp(startPoint, endPoint, lerpAmount);
+
+                RaycastHit2D hitInfo = Physics2D.Raycast(origin, Vector2.down, distance);
+
+                if (hitInfo.collider != null && hitInfo.collider != boxCol) //if raycast hits something that isn't the player
+                {
+                    Debug.Log("Hit Collider: " + hitInfo.collider);
+                    connected = true;
+                    grounded = true;
+                    falling = false;
+                    transform.Translate(Vector2.down * (hitInfo.distance - box.height / 2));
+                    velocity = new Vector2(velocity.x, 0);
+                    break;
+                }
+            }
+
+            if (!connected) //if raycast doesn't hit anything
+            {
+                grounded = false;
+            }
+        }
+
+        //-----HORIZONTAL MOVEMENT-----\\
+
+        float horizontalAxis = Input.GetAxisRaw("Horizontal");
+
+        float newVelocityX = velocity.x;
+
+        if (horizontalAxis != 0) //add movement according to input
+        {
+            newVelocityX += acceleration * horizontalAxis;
+            newVelocityX = Mathf.Clamp(newVelocityX, -maxSpeed, maxSpeed);
+        }
+        else if (velocity.x != 0) //apply deceleration due to no input
+        {
+            int modifier = velocity.x > 0 ? -1 : 1;
+            newVelocityX += acceleration * modifier;
+        }
+
+        velocity = new Vector2(newVelocityX, velocity.y);
+
+        if (velocity.x != 0)
+        {
+            Vector2 startPoint = new Vector2(box.center.x, box.yMin + margin);
+            Vector2 endPoint = new Vector2(box.center.x, box.yMax - margin);
+
+            float sideRayLength = box.width / 2 + Mathf.Abs(newVelocityX * Time.deltaTime);
+            Vector2 direction = newVelocityX > 0 ? Vector2.right : Vector2.left;
+
+            for (int i = 0; i < horizontalRays; i++)
+            {
+                float lerpAmount = (float)i / (float)(horizontalRays - 1);
+                Vector2 origin = Vector2.Lerp(startPoint, endPoint, lerpAmount);
+
+                RaycastHit2D hitInfo = Physics2D.Raycast(origin, direction, sideRayLength);
+
+                if (hitInfo.collider != null && hitInfo.collider != boxCol)
+                {
+                    transform.Translate(direction * (hitInfo.distance - box.width / 2));
+                    velocity = new Vector2(0, velocity.y);
+                    break;
+                }
+            }
 
         }
 
-        if (Input.GetAxis("Horizontal") > 0.1f) //flip sprite to the right when moving right
+        //-----JUMPING-----\\
+
+        if (grounded && Input.GetButtonDown("Jump"))
         {
-
-            transform.localScale = new Vector3(1, 1, 1);
-
+            velocity = new Vector2(velocity.x, velocity.y + jump * Time.deltaTime);
         }
 
     }
-	
-	void FixedUpdate ()
+
+    void LateUpdate()
     {
-
-        float horizontal = Input.GetAxis("Horizontal");
-        player.AddForce((Vector2.right * speed) * horizontal); //floaty moving with acceleration
-
-        if (player.velocity.x < -maxSpeed) //cap speed in the negative direction
-        {
-
-            player.velocity = new Vector2(-maxSpeed, player.velocity.y);
-
-        }
-
-        if (player.velocity.x > maxSpeed) //cap speed in the positive direction
-        {
-
-            player.velocity = new Vector2(maxSpeed, player.velocity.y);
-
-        }
-
+        //applies movement with Time.deltaTime being time since last frame
+        transform.Translate(velocity * Time.deltaTime);
     }
+
 }
