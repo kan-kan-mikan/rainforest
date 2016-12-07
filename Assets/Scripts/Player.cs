@@ -138,10 +138,34 @@ public class Player : MonoBehaviour
 
         //-----JUMPING-----\\
 
+        /*
         if (grounded && Input.GetButtonDown("Jump"))
         {
             velocity = new Vector2(velocity.x, velocity.y + jump * Time.deltaTime);
         }
+        */
+
+        bool inputJump = Input.GetButton("Jump");
+        bool lastInput = false;
+        float jumpPressedTime = 0;
+        float jumpPressLeeway = 0.1f;
+
+        if(inputJump && !lastInput)
+        {
+            jumpPressedTime = Time.time;
+        }
+        else if(!inputJump)
+        {
+            jumpPressedTime = 0;
+        }
+
+        if(grounded && Time.time - jumpPressedTime < jumpPressLeeway)
+        {
+            velocity = new Vector2(velocity.x, velocity.y + jump * Time.deltaTime);
+            jumpPressedTime = 0;
+        }
+
+        lastInput = inputJump;
 
     }
 
