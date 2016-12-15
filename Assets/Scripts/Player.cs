@@ -4,11 +4,11 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
 
-    public float acceleration = 4f;
-    public float maxSpeed = 150f;
+    public static float acceleration = 80f;
+    public static float maxSpeed = 80f;
     public float gravity = 6f;
-    public float maxfall = 200f;
-    public float jump = 200f;
+    public float maxfall = 150f;
+    public float jump = 8000f;
 
     int layerMask;
 
