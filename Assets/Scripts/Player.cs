@@ -4,17 +4,17 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
 
-    public float acceleration = 4f;
-    public float maxSpeed = 150f;
+    public static float acceleration = 80f;
+    public static float maxSpeed = 80f;
     public float gravity = 6f;
-    public float maxfall = 200f;
-    public float jump = 200f;
+    public float maxfall = 150f;
+    public float jump = 8000f;
 
     int layerMask;
 
     Rect box;
 
-    Vector2 velocity;
+    public static Vector2 velocity;
 
     bool grounded = false;
     bool falling = false;
@@ -138,10 +138,34 @@ public class Player : MonoBehaviour
 
         //-----JUMPING-----\\
 
+        /*
         if (grounded && Input.GetButtonDown("Jump"))
         {
             velocity = new Vector2(velocity.x, velocity.y + jump * Time.deltaTime);
         }
+        */
+
+        bool inputJump = Input.GetButton("Jump");
+        bool lastInput = false;
+        float jumpPressedTime = 0;
+        float jumpPressLeeway = 0.1f;
+
+        if(inputJump && !lastInput)
+        {
+            jumpPressedTime = Time.time;
+        }
+        else if(!inputJump)
+        {
+            jumpPressedTime = 0;
+        }
+
+        if(grounded && Time.time - jumpPressedTime < jumpPressLeeway)
+        {
+            velocity = new Vector2(velocity.x, velocity.y + jump * Time.deltaTime);
+            jumpPressedTime = 0;
+        }
+
+        lastInput = inputJump;
 
     }
 
