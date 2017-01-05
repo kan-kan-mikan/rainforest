@@ -7,42 +7,42 @@ public class GameCamera : MonoBehaviour
     public float acceleration = Player.acceleration;
     public float maxSpeed = Player.maxSpeed;
 
-    Vector2 velocity = new Vector2(0f, 0f);
+    Vector2 velocity = Player.velocity;
     float newVelocityX;
 
     float horizontalAxis;
+    BoxCollider2D boxcol;
 
     void Start()
     {
-        horizontalAxis = Input.GetAxisRaw("Horizontal");
+        boxcol = GetComponent<BoxCollider2D>();
     }
-   
+
     void FixedUpdate()
     {
-
-        BoxCollider2D boxcol = GetComponent<BoxCollider2D>();
-
-        if(boxcol.IsTouching( GameObject.FindWithTag("Player").GetComponent<BoxCollider2D>() ) )
+        if (!boxcol.IsTouching(GameObject.FindWithTag("Player").GetComponent<BoxCollider2D>()))
         {
+            newVelocityX = 0f;
+        }
+    }
+
+    void Update()
+    {
+        horizontalAxis = Input.GetAxisRaw("Horizontal");
+
+        if (boxcol.IsTouching(GameObject.FindWithTag("Player").GetComponent<BoxCollider2D>()))
+        {
+            Debug.Log("Player hit camera wall");
             newVelocityX = velocity.x;
+
+            if (horizontalAxis == 1) //add movement according to input
+            {
+                newVelocityX += acceleration * horizontalAxis;
+                newVelocityX = Mathf.Clamp(newVelocityX, -maxSpeed, maxSpeed);
+            }
         }
 
-        if (horizontalAxis != 0) //add movement according to input
-        {
-            newVelocityX += acceleration * horizontalAxis;
-            newVelocityX = Mathf.Clamp(newVelocityX, -maxSpeed, maxSpeed);
-        }
-        else if (velocity.x != 0) //apply deceleration due to no input
-        {
-            int modifier = velocity.x > 0 ? -1 : 1;
-            newVelocityX += acceleration * modifier;
-        }
-
-        if (GetComponent<BoxCollider2D>() == true)
-        {
-            velocity = new Vector2(newVelocityX, velocity.y);
-        }
-
+        velocity = new Vector2(newVelocityX, velocity.y);
     }
 
     void LateUpdate()

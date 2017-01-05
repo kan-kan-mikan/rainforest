@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
 
     Rect box;
 
-    Vector2 velocity;
+    public static Vector2 velocity;
 
     bool grounded = false;
     bool falling = false;
