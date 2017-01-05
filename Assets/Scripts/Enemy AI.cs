@@ -19,19 +19,21 @@ public class EnemyAI : MonoBehaviour
 
 	Vector2 walkAmount;
 
-	void Start(){
-
+	void Start()
+    {
 		GameObject Enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<GameObject>();
 		GameObject Playera = GameObject.FindGameObjectWithTag("Playera").GetComponent<GameObject>();
 	}
 
 	void FixedUpdate()
 	{ 
-		if(destroy == true) {
+		if(destroy == true)
+        {
 			Playera.SetActive(false);
 		}
 
-		if (destroy == false) {
+		if (destroy == false)
+        {
 			Playera.SetActive(true);
 		}
 
@@ -39,26 +41,32 @@ public class EnemyAI : MonoBehaviour
 		transform.Translate(walkAmount);
 
 		float newVelocityX = velocity.x;
-	
-		if (isVisible == true) { 
+
+		if (isVisible == true)
+        { 
 			newVelocityX += acceleration;
 			newVelocityX = Mathf.Clamp (newVelocityX, -maxSpeed, maxSpeed);
 		}
 
-		velocity = new Vector2 (newVelocityX, velocity.y);
+		velocity = new Vector2(newVelocityX, velocity.y);
 
-				}
+	}
+
 	void OnCollisionEnter2D(Collision2D coll)
 	{
-		if(coll.gameObject.name == "Playera") {
+		if(coll.gameObject.name == "Playera")
+        {
 			destroy = true;
-		} else  {
+		}
+        else
+        {
 			destroy = false;
 		}
-		}
+	}
 
 	void LateUpdate()
 	{
 		transform.Translate (velocity * Time.deltaTime);
 	}
+
 }
