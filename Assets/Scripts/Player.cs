@@ -4,11 +4,11 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
 
-    public static float acceleration = 80f;
-    public static float maxSpeed = 80f;
-    public float gravity = 6f;
-    public float maxfall = 150f;
-    public float jump = 8000f;
+    public static float acceleration = 5f;
+    public static float maxSpeed = 5f;
+    public float gravity = 0.5f;
+    public float maxfall = 2.5f;
+    public float jump = 750f;
 
     int layerMask;
 
@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
 
     int horizontalRays = 6;
     int verticalRays = 4;
-    int margin = 2;
+    float margin = 0.9f;
 
     void Start()
     {
@@ -113,6 +113,7 @@ public class Player : MonoBehaviour
 
         if (velocity.x != 0)
         {
+
             Vector2 startPoint = new Vector2(box.center.x, box.yMin + margin);
             Vector2 endPoint = new Vector2(box.center.x, box.yMax - margin);
 
@@ -138,31 +139,25 @@ public class Player : MonoBehaviour
 
         //-----JUMPING-----\\
 
-        /*
-        if (grounded && Input.GetButtonDown("Jump"))
-        {
-            velocity = new Vector2(velocity.x, velocity.y + jump * Time.deltaTime);
-        }
-        */
-
         bool inputJump = Input.GetButton("Jump");
         bool lastInput = false;
         float jumpPressedTime = 0;
         float jumpPressLeeway = 0.1f;
 
-        if(inputJump && !lastInput)
+        if (inputJump && !lastInput)
         {
             jumpPressedTime = Time.time;
         }
-        else if(!inputJump)
+        else if (!inputJump)
         {
             jumpPressedTime = 0;
         }
 
-        if(grounded && Time.time - jumpPressedTime < jumpPressLeeway)
+        if (grounded && Time.time - jumpPressedTime < jumpPressLeeway)
         {
             velocity = new Vector2(velocity.x, velocity.y + jump * Time.deltaTime);
             jumpPressedTime = 0;
+            grounded = false;
         }
 
         lastInput = inputJump;
