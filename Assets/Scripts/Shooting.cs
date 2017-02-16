@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Shooting : MonoBehaviour
 {
+	//Make child gameobject of Player and attach this script to it
+
 	public GameObject bullet; 
 	public GameObject bulletClone;
 	public Rigidbody2D bulletPrefab;
