@@ -22,6 +22,7 @@ public class Projectiles : MonoBehaviour
 	void OnCollisionEnter2D(Collision2D col)
 	{
 		if(col.gameObject.tag == "Enemy") {       // If bullet collides with enemy, destroyaa is true
+		//Enemy might not be destroyed
 			destroyaa = true;
 		} 
 	}
