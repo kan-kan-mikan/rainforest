@@ -6,9 +6,9 @@ public class Player : MonoBehaviour
 
     public static float acceleration = 5f;
     public static float maxSpeed = 5f;
-    public float gravity = 0.5f;
-    public float maxfall = 2.5f;
-    public float jump = 750f;
+    public float gravity = 0.3f;
+    public float maxfall = 0.3f;
+    public float jump = 15f;
 
     int layerMask;
 
@@ -54,8 +54,8 @@ public class Player : MonoBehaviour
 
         if (grounded || falling) //doesn't check if moving up in the air
         {
-            Vector2 startPoint = new Vector2(box.xMax - margin, box.center.y);
-            Vector2 endPoint = new Vector2(box.xMin + margin, box.center.y);
+            Vector2 startPoint = new Vector2(box.xMin + margin, box.center.y);
+            Vector2 endPoint = new Vector2(box.xMax - margin, box.center.y);
 
             //conditional operator checks if grounded true then use margin if false use movement distance
             float distance = box.height / 2 + (grounded ? margin : Mathf.Abs(velocity.y * Time.deltaTime));
@@ -69,7 +69,7 @@ public class Player : MonoBehaviour
 
             for (int i = 0; i < verticalRays; i++)
             {
-                float lerpAmount = (float)i / (float) (verticalRays - 1);
+                float lerpAmount = (float)i / (float)(verticalRays - 1);
                 Vector2 origin = Vector2.Lerp(startPoint, endPoint, lerpAmount);
 
                 RaycastHit2D hitInfo = Physics2D.Raycast(origin, Vector2.down, distance);
@@ -137,6 +137,37 @@ public class Player : MonoBehaviour
 
         }
 
+        //-----ONE WAY PLATFORMS-----\\
+
+        if (grounded || velocity.y > 0)
+        {
+            float upRayLength = grounded ? margin : velocity.y * Time.deltaTime;
+
+            bool connection = false;
+            int lastConnection = 0;
+            Vector2 min = new Vector2(box.xMin + margin, box.center.y);
+            Vector2 max = new Vector2(box.xMax - margin, box.center.y);
+            RaycastHit2D[] upRays = new RaycastHit2D[verticalRays];
+
+            for (int i = 0; i < verticalRays; i++)
+            {
+                Vector2 start = Vector2.Lerp(min, max, i / verticalRays);
+                Vector2 end = start + Vector2.up * (upRayLength + box.height / 2);
+                upRays[i] = Physics2D.Linecast(start, end, Raylayers.upRay);
+                if (upRays[i].fraction > 0)
+                {
+                    connection = true;
+                    lastConnection = i;
+                }
+            }
+
+            if (connection)
+            {
+                velocity = new Vector2(velocity.x, 0);
+                transform.position += Vector3.up * (upRays[lastConnection].point.y - box.yMax);
+            }
+        }
+
         //-----JUMPING-----\\
 
         bool inputJump = Input.GetButton("Jump");
@@ -155,7 +186,7 @@ public class Player : MonoBehaviour
 
         if (grounded && Time.time - jumpPressedTime < jumpPressLeeway)
         {
-            velocity = new Vector2(velocity.x, velocity.y + jump * Time.deltaTime);
+            velocity = new Vector2(velocity.x, jump);
             jumpPressedTime = 0;
             grounded = false;
         }
