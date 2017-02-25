@@ -19,5 +19,6 @@ public class Shooting : MonoBehaviour
 			bulletPrefab.velocity = (Vector2.right * 250); //Take the rigidbody of the bullet clone and add force to it
 			Destroy(bulletClone, 2); //Destroys the bullets after 2 seconds
 		}
+
 	}		
 }

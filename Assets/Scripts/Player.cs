@@ -139,6 +139,14 @@ public class Player : MonoBehaviour
 
         //-----ONE WAY PLATFORMS-----\\
 
+        /*
+            Currently more or less nonfunctional (at least not as intended)
+            
+            To use, set a platform as having being on the SoftTop or SoftBottom layer.
+            As the name suggests, a SoftTop allows dropping down but not going back up.
+            A SoftBottom allows for jumping up but not going back down.
+        */
+
         if (grounded || velocity.y > 0)
         {
             float upRayLength = grounded ? margin : velocity.y * Time.deltaTime;
