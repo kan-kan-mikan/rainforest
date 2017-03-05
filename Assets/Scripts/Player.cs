@@ -6,9 +6,9 @@ public class Player : MonoBehaviour
 
     public static float acceleration = 5f;
     public static float maxSpeed = 5f;
-    public float gravity = 0.3f;
-    public float maxfall = 0.3f;
-    public float jump = 15f;
+    public float gravity = 1f;
+    public float maxfall = 12f;
+    public float jump = 18f;
 
     int layerMask;
 
@@ -76,7 +76,7 @@ public class Player : MonoBehaviour
 
                 if (hitInfo.collider != null && hitInfo.collider != boxCol) //if raycast hits something that isn't the player
                 {
-                    Debug.Log("Hit Collider: " + hitInfo.collider);
+                    //Debug.Log("Hit Collider: " + hitInfo.collider);
                     connected = true;
                     grounded = true;
                     falling = false;
@@ -129,6 +129,7 @@ public class Player : MonoBehaviour
 
                 if (hitInfo.collider != null && hitInfo.collider != boxCol)
                 {
+                    //Debug.Log("Hit Collider: " + hitInfo.collider);
                     transform.Translate(direction * (hitInfo.distance - box.width / 2));
                     velocity = new Vector2(0, velocity.y);
                     break;

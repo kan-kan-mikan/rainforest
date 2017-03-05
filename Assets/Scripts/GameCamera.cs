@@ -12,10 +12,16 @@ public class GameCamera : MonoBehaviour
 
     float horizontalAxis;
     BoxCollider2D boxcol;
+    BoxCollider2D frontWall;
+    BoxCollider2D endWall;
+
+    bool cameraFrozen;
 
     void Start()
     {
         boxcol = GetComponent<BoxCollider2D>();
+        frontWall = GameObject.FindWithTag("Front Wall").GetComponent<BoxCollider2D>();
+        endWall = GameObject.FindWithTag("CameraFreezer").GetComponent<BoxCollider2D>();
     }
 
     void FixedUpdate()
@@ -41,12 +47,27 @@ public class GameCamera : MonoBehaviour
                 newVelocityX = Mathf.Clamp(newVelocityX, -maxSpeed, maxSpeed);
             }
         }
+    }
 
-        velocity = new Vector2(newVelocityX, velocity.y);
+    void OnTriggerStay2D(Collider2D col)
+    {
+        if(col.IsTouching(endWall))
+        {
+            Debug.Log("Camera Frozen");
+
+            cameraFrozen = true;
+        }
     }
 
     void LateUpdate()
     {
+        if(cameraFrozen)
+        {
+            newVelocityX = 0f;
+        }
+
+        velocity = new Vector2(newVelocityX, velocity.y);
+
         //applies movement with Time.deltaTime being time since last frame
         transform.Translate(velocity * Time.deltaTime);
     }
