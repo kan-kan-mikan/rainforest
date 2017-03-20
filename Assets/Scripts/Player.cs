@@ -16,8 +16,8 @@ public class Player : MonoBehaviour
 
     public static Vector2 velocity;
 
-    bool grounded = false;
-    bool falling = false;
+    public static bool grounded = false;
+    public bool falling = false;
 
     int horizontalRays = 6;
     int verticalRays = 4;
@@ -201,6 +201,17 @@ public class Player : MonoBehaviour
         }
 
         lastInput = inputJump;
+
+        //-----PLAYER FACING DIRECTION-----\\
+
+        if (Input.GetAxis("Horizontal") > 0) //flip character to face right if moving right
+        {
+            transform.localScale = new Vector2(1.7f, 1.7f);
+        }
+        else if (Input.GetAxis("Horizontal") < 0) //flip character to face left if moving left
+        {
+            transform.localScale = new Vector2(-1.7f, 1.7f);
+        }
 
     }
 
