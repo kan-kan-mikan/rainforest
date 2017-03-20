@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
 
     int horizontalRays = 6;
     int verticalRays = 4;
-    float margin = 0.9f;
+    float margin = 0.1f;
 
     void Start()
     {
