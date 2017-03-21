@@ -11,8 +11,10 @@ public class Shooting : MonoBehaviour
     private Vector2 dir;
 
     private SpriteRenderer playersprite;
-    private Sprite[] sprites;
+    private Sprite[] walksprites;
+    private Sprite[] jumpsprites;
     private bool faceRight;
+    private int curwalk = 1;
 
     public float fireRate = 0.2f;
     private float fireTime = 0f;
@@ -23,108 +25,175 @@ public class Shooting : MonoBehaviour
     void Start()
     {
         playersprite = GameObject.FindWithTag("Player").GetComponent<SpriteRenderer>();
-        sprites = Resources.LoadAll<Sprite>("Sprites/PNG/characters/axeloak");
+        walksprites = Resources.LoadAll<Sprite>("Sprites/PNG/characters/axeloak");
+        jumpsprites = Resources.LoadAll<Sprite>("Sprites/PNG/characters/axeloak/Jump");
         dir = Vector2.right; //default facing position is always right unless that gets changed somehow
         faceRight = true;
     }
 
-    void FixedUpdate() //spaghetti code written 2 days before the game was due, please excuse bad code practices
+    void FixedUpdate() //spaghetti code, please excuse bad code practices
     {
-        if (Input.GetAxis("Horizontal") > 0 && Input.GetAxis("Vertical") > 0) //fire right and up while on ground
+        if (Input.GetAxis("Horizontal") > 0 && Input.GetAxis("Vertical") > 0) //fire right and up
         {
             dir = new Vector2(1, 1);
             faceRight = true;
-            playersprite.sprite = sprites[3];
             x = 1.2f;
             y = 1.2f;
+
+            if (Player.grounded)
+            {
+                playersprite.sprite = walksprites[4];
+                curwalk = 4;
+            }
+            else
+            {
+                playersprite.sprite = jumpsprites[2];
+                curwalk = -1;
+            } 
         }
-        else if (Input.GetAxis("Horizontal") < 0 && Input.GetAxis("Vertical") > 0) //fire left and up while on ground
+        else if (Input.GetAxis("Horizontal") < 0 && Input.GetAxis("Vertical") > 0) //fire left and up
         {
             dir = new Vector2(-1, 1);
             faceRight = false;
-            playersprite.sprite = sprites[3];
             x = -1.2f;
             y = 1.2f;
+
+            if (Player.grounded)
+            {
+                playersprite.sprite = walksprites[4];
+                curwalk = 4;
+            }
+            else
+            {
+                playersprite.sprite = jumpsprites[2];
+                curwalk = -1;
+            }
         }
-        else if (Input.GetAxis("Horizontal") > 0 && Input.GetAxis("Vertical") < 0) //fire right and down while on ground
+        else if (Input.GetAxis("Horizontal") > 0 && Input.GetAxis("Vertical") < 0) //fire right and down
         {
             dir = new Vector2(1, -1);
             faceRight = true;
-            playersprite.sprite = sprites[2];
             x = 1.2f;
             y = -1.2f;
+
+            if (Player.grounded)
+            {
+                playersprite.sprite = walksprites[1];
+                curwalk = 0;
+            }
+            else
+            {
+                playersprite.sprite = jumpsprites[1];
+                curwalk = -1;
+            }
         }
-        else if (Input.GetAxis("Horizontal") < 0 && Input.GetAxis("Vertical") < 0) //fire left and down while on ground
+        else if (Input.GetAxis("Horizontal") < 0 && Input.GetAxis("Vertical") < 0) //fire left and down
         {
             dir = new Vector2(-1, -1);
             faceRight = false;
-            playersprite.sprite = sprites[2];
             x = -1.2f;
             y = -1.2f;
+
+            if (Player.grounded)
+            {
+                playersprite.sprite = walksprites[1];
+                curwalk = 0;
+            }
+            else
+            {
+                playersprite.sprite = jumpsprites[1];
+                curwalk = -1;
+            }
         }
 
-        else if (Input.GetAxis("Horizontal") > 0) //fire right while on ground
+        else if (Input.GetAxis("Horizontal") > 0) //fire right
         {
             dir = Vector2.right;
             faceRight = true;
-            playersprite.sprite = sprites[1];
             x = 1.5f;
             y = -0.1f;
+
+            if (Player.grounded)
+            {
+                playersprite.sprite = walksprites[7];
+                curwalk = 6;
+            }
+            else
+            {
+                playersprite.sprite = jumpsprites[0];
+                curwalk = -1;
+            }
         }
-        else if (Input.GetAxis("Horizontal") < 0) //fire left while on ground
+        else if (Input.GetAxis("Horizontal") < 0) //fire left
         {
             dir = Vector2.left;
             faceRight = false;
-            playersprite.sprite = sprites[1];
             x = -1.5f;
             y = -0.1f;
+
+            if (Player.grounded)
+            {
+                playersprite.sprite = walksprites[7];
+                curwalk = 6;
+            }
+            else
+            {
+                playersprite.sprite = jumpsprites[0];
+                curwalk = -1;
+            }
         }
-        else if (faceRight && Input.GetAxis("Vertical") > 0) //fire up while on ground and facing right
+        else if (faceRight && Input.GetAxis("Vertical") > 0) //fire up and facing right
         {
             dir = Vector2.up;
-            playersprite.sprite = sprites[3];
             x = .8f;
             y = 1.2f;
+
+            if (Player.grounded)
+            {
+                playersprite.sprite = walksprites[4];
+                curwalk = 4;
+            }
+            else
+            {
+                playersprite.sprite = jumpsprites[2];
+                curwalk = -1;
+            }
         }
-        else if (!faceRight && Input.GetAxis("Vertical") > 0) //fire up while on ground and facing left
+        else if (!faceRight && Input.GetAxis("Vertical") > 0) //fire up and facing left
         {
             dir = Vector2.up;
-            playersprite.sprite = sprites[3];
             x = -0.8f;
             y = 1.2f;
-        }
 
-        else if (faceRight && Input.GetAxis("Vertical") < 0 && Player.grounded) //fire right while prone on ground
-        {
-            dir = Vector2.right;
-            faceRight = true;
-            playersprite.sprite = sprites[1];
-            x = 1.5f;
-            y = -0.7f;
+            if (Player.grounded)
+            {
+                playersprite.sprite = walksprites[4];
+                curwalk = 4;
+            }
+            else
+            {
+                playersprite.sprite = jumpsprites[2];
+                curwalk = -1;
+            }
         }
-        else if (!faceRight && Input.GetAxis("Vertical") < 0 && Player.grounded) //fire left while prone on ground
-        {
-            dir = Vector2.left;
-            faceRight = false;
-            playersprite.sprite = sprites[1];
-            x = -1.5f;
-            y = -0.7f;
-        }
-        else if (faceRight && Input.GetAxis("Vertical") < 0 && !Player.grounded) //jumping in air, aiming down and facing right
+        else if (!Player.grounded && faceRight && Input.GetAxis("Vertical") < 0) //fire down and facing right while in air
         {
             dir = Vector2.down;
-            playersprite.sprite = sprites[2];
             x = 0.8f;
             y = -1.2f;
+
+            playersprite.sprite = jumpsprites[1];
+            curwalk = -1;
         }
-        else if (!faceRight && Input.GetAxis("Vertical") < 0 && !Player.grounded) //jumping in air, aiming down and facing left
+        else if (!Player.grounded && !faceRight && Input.GetAxis("Vertical") < 0) //fire down and facing left while in air
         {
             dir = Vector2.down;
-            playersprite.sprite = sprites[2];
             x = -0.8f;
             y = -1.2f;
-        }
 
+            playersprite.sprite = jumpsprites[1];
+            curwalk = -1;
+        }
         else //aim in last facing direction in case of no input
         {
             if(faceRight)
@@ -132,12 +201,34 @@ public class Shooting : MonoBehaviour
                 dir = Vector2.right;
                 x = 1.5f;
                 y = -0.1f;
+
+                if (Player.grounded)
+                {
+                    playersprite.sprite = walksprites[7];
+                    curwalk = 6;
+                }
+                else
+                {
+                    playersprite.sprite = jumpsprites[0];
+                    curwalk = -1;
+                }
             }
             else
             {
                 dir = Vector2.left;
                 x = -1.5f;
                 y = -0.1f;
+
+                if (Player.grounded)
+                {
+                    playersprite.sprite = walksprites[7];
+                    curwalk = 6;
+                }
+                else
+                {
+                    playersprite.sprite = jumpsprites[0];
+                    curwalk = -1;
+                }
             }
         }
     }
