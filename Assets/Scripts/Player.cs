@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class Player : MonoBehaviour
@@ -212,6 +213,34 @@ public class Player : MonoBehaviour
     {
         //applies movement with Time.deltaTime being time since last frame
         transform.Translate(velocity * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "End of Stage")
+        {
+            Scene scene = SceneManager.GetActiveScene();
+            if(scene.name == "Mountain")
+            {
+                SceneManager.LoadScene("Forest");
+            }
+            else if(scene.name == "Forest")
+            {
+                SceneManager.LoadScene("City");
+            }
+            else if (scene.name == "City")
+            {
+                SceneManager.LoadScene("Cyberpunk");
+            }
+            else if (scene.name == "City")
+            {
+                SceneManager.LoadScene("Industrial");
+            }
+            else if (scene.name == "Industrial")
+            {
+                SceneManager.LoadScene("Level Select");
+            }
+        }
     }
 
 }

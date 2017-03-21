@@ -5,6 +5,8 @@ using UnityEngine;
 public class Death : MonoBehaviour
 {
 
+    public AudioSource sound;
+    public AudioClip rip;
     public GameObject player;
     public GameObject respawn;
     public float respawntimer = 1.5f;
@@ -41,6 +43,8 @@ public class Death : MonoBehaviour
             player.GetComponent<BoxCollider2D>().enabled = false;
             player.GetComponent<Player>().enabled = false;
             player.GetComponentInChildren<Shooting>().enabled = false;
+            sound.clip = rip;
+            sound.Play();
         }
     }
 
