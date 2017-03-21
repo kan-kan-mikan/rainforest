@@ -14,7 +14,7 @@ public class EnemyShooting : MonoBehaviour
     bool activated;
     bool faceRight;
 
-    public float fireRate = 0.05f;
+    public float fireRate = .5f;
     private float fireTime = 0f;
     private int burstcount = 0;
 
@@ -25,7 +25,7 @@ public class EnemyShooting : MonoBehaviour
         Player = GameObject.FindWithTag("Player");
     }
 
-    void Update()
+    void FixedUpdate()
     {
         //-----PLAYER FACING DIRECTION-----\\
 
@@ -42,7 +42,7 @@ public class EnemyShooting : MonoBehaviour
 
         dir = Player.transform.InverseTransformDirection(Player.transform.position - transform.position);
         angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        Debug.Log(angle); //outputs angle between enemy and player as values between -180 and 180 with right being 0 degrees
+        //Debug.Log(angle); //outputs angle between enemy and player as values between -180 and 180 with right being 0 degrees
 
         if(angle > -23 && angle <= 22)
         {
@@ -78,11 +78,11 @@ public class EnemyShooting : MonoBehaviour
         }
     }
 
-    void LateUpdate()
+    void Update()
     {
         if(burstcount > 3)
         {
-            fireTime += 1;
+            fireTime += 3;
         }
 
         if (Time.time > fireTime)

@@ -12,7 +12,7 @@ public class Shooting : MonoBehaviour
 
     private bool faceRight;
 
-    public float fireRate = 0.05f;
+    public float fireRate = 0.2f;
     private float fireTime = 0f;
 
     void Start()
@@ -89,7 +89,6 @@ public class Shooting : MonoBehaviour
 
     void Update()
     { 
-
         if (Input.GetButtonDown("Fire1") && Time.time > fireTime)
 		{
             fireTime = Time.time + fireRate;
