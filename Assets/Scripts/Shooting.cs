@@ -15,8 +15,10 @@ public class Shooting : MonoBehaviour
     private Sprite[] jumpsprites;
     private bool faceRight;
     private int curwalk = 1;
+    private float spriteChangeRate = 0.05f;
+    private float spriteChangeTime = 0f;
 
-    public float fireRate = 0.2f;
+    public float fireRate = 0.05f;
     private float fireTime = 0f;
 
     private float x = 0f;
@@ -42,13 +44,18 @@ public class Shooting : MonoBehaviour
 
             if (Player.grounded)
             {
-                playersprite.sprite = walksprites[4];
-                curwalk = 4;
+                if (Player.velocity.x != 0)
+                {
+                    playersprite.sprite = walksprites[3 + curwalk];
+                }
+                else
+                {
+                    playersprite.sprite = walksprites[3];
+                }
             }
             else
             {
                 playersprite.sprite = jumpsprites[2];
-                curwalk = -1;
             } 
         }
         else if (Input.GetAxis("Horizontal") < 0 && Input.GetAxis("Vertical") > 0) //fire left and up
@@ -60,13 +67,18 @@ public class Shooting : MonoBehaviour
 
             if (Player.grounded)
             {
-                playersprite.sprite = walksprites[4];
-                curwalk = 4;
+                if (Player.velocity.x != 0)
+                {
+                    playersprite.sprite = walksprites[3 + curwalk];
+                }
+                else
+                {
+                    playersprite.sprite = walksprites[3];
+                }
             }
             else
             {
                 playersprite.sprite = jumpsprites[2];
-                curwalk = -1;
             }
         }
         else if (Input.GetAxis("Horizontal") > 0 && Input.GetAxis("Vertical") < 0) //fire right and down
@@ -78,13 +90,18 @@ public class Shooting : MonoBehaviour
 
             if (Player.grounded)
             {
-                playersprite.sprite = walksprites[1];
-                curwalk = 0;
+                if (Player.velocity.x != 0)
+                {
+                    playersprite.sprite = walksprites[curwalk];
+                }
+                else
+                {
+                    playersprite.sprite = walksprites[0];
+                }
             }
             else
             {
                 playersprite.sprite = jumpsprites[1];
-                curwalk = -1;
             }
         }
         else if (Input.GetAxis("Horizontal") < 0 && Input.GetAxis("Vertical") < 0) //fire left and down
@@ -96,13 +113,18 @@ public class Shooting : MonoBehaviour
 
             if (Player.grounded)
             {
-                playersprite.sprite = walksprites[1];
-                curwalk = 0;
+                if (Player.velocity.x != 0)
+                {
+                    playersprite.sprite = walksprites[curwalk];
+                }
+                else
+                {
+                    playersprite.sprite = walksprites[0];
+                }
             }
             else
             {
                 playersprite.sprite = jumpsprites[1];
-                curwalk = -1;
             }
         }
 
@@ -115,13 +137,18 @@ public class Shooting : MonoBehaviour
 
             if (Player.grounded)
             {
-                playersprite.sprite = walksprites[7];
-                curwalk = 6;
+                if (Player.velocity.x != 0)
+                {
+                    playersprite.sprite = walksprites[6+curwalk];
+                }
+                else
+                {
+                    playersprite.sprite = walksprites[6];
+                }
             }
             else
             {
                 playersprite.sprite = jumpsprites[0];
-                curwalk = -1;
             }
         }
         else if (Input.GetAxis("Horizontal") < 0) //fire left
@@ -133,13 +160,18 @@ public class Shooting : MonoBehaviour
 
             if (Player.grounded)
             {
-                playersprite.sprite = walksprites[7];
-                curwalk = 6;
+                if (Player.velocity.x != 0)
+                {
+                    playersprite.sprite = walksprites[6 + curwalk];
+                }
+                else
+                {
+                    playersprite.sprite = walksprites[6];
+                }
             }
             else
             {
                 playersprite.sprite = jumpsprites[0];
-                curwalk = -1;
             }
         }
         else if (faceRight && Input.GetAxis("Vertical") > 0) //fire up and facing right
@@ -150,13 +182,18 @@ public class Shooting : MonoBehaviour
 
             if (Player.grounded)
             {
-                playersprite.sprite = walksprites[4];
-                curwalk = 4;
+                if (Player.velocity.x != 0)
+                {
+                    playersprite.sprite = walksprites[3 + curwalk];
+                }
+                else
+                {
+                    playersprite.sprite = walksprites[3];
+                }
             }
             else
             {
                 playersprite.sprite = jumpsprites[2];
-                curwalk = -1;
             }
         }
         else if (!faceRight && Input.GetAxis("Vertical") > 0) //fire up and facing left
@@ -167,13 +204,18 @@ public class Shooting : MonoBehaviour
 
             if (Player.grounded)
             {
-                playersprite.sprite = walksprites[4];
-                curwalk = 4;
+                if (Player.velocity.x != 0)
+                {
+                    playersprite.sprite = walksprites[3 + curwalk];
+                }
+                else
+                {
+                    playersprite.sprite = walksprites[3];
+                }
             }
             else
             {
                 playersprite.sprite = jumpsprites[2];
-                curwalk = -1;
             }
         }
         else if (!Player.grounded && faceRight && Input.GetAxis("Vertical") < 0) //fire down and facing right while in air
@@ -183,7 +225,6 @@ public class Shooting : MonoBehaviour
             y = -1.2f;
 
             playersprite.sprite = jumpsprites[1];
-            curwalk = -1;
         }
         else if (!Player.grounded && !faceRight && Input.GetAxis("Vertical") < 0) //fire down and facing left while in air
         {
@@ -192,7 +233,6 @@ public class Shooting : MonoBehaviour
             y = -1.2f;
 
             playersprite.sprite = jumpsprites[1];
-            curwalk = -1;
         }
         else //aim in last facing direction in case of no input
         {
@@ -204,13 +244,18 @@ public class Shooting : MonoBehaviour
 
                 if (Player.grounded)
                 {
-                    playersprite.sprite = walksprites[7];
-                    curwalk = 6;
+                    if (Player.velocity.x != 0)
+                    {
+                        playersprite.sprite = walksprites[6 + curwalk];
+                    }
+                    else
+                    {
+                        playersprite.sprite = walksprites[6];
+                    }
                 }
                 else
                 {
                     playersprite.sprite = jumpsprites[0];
-                    curwalk = -1;
                 }
             }
             else
@@ -221,13 +266,18 @@ public class Shooting : MonoBehaviour
 
                 if (Player.grounded)
                 {
-                    playersprite.sprite = walksprites[7];
-                    curwalk = 6;
+                    if (Player.velocity.x != 0)
+                    {
+                        playersprite.sprite = walksprites[6 + curwalk];
+                    }
+                    else
+                    {
+                        playersprite.sprite = walksprites[6];
+                    }
                 }
                 else
                 {
                     playersprite.sprite = jumpsprites[0];
-                    curwalk = -1;
                 }
             }
         }
@@ -242,6 +292,18 @@ public class Shooting : MonoBehaviour
 			bulletPrefab = bulletClone.GetComponent<Rigidbody2D>(); 
 			bulletPrefab.velocity = (dir * 10); //Take the rigidbody of the bullet clone and add force to it
 		}
+
+        if (Player.grounded && Time.time > spriteChangeTime)
+        {
+            spriteChangeTime = Time.time + spriteChangeRate;
+
+            curwalk++;
+            
+            if(curwalk > 2)
+            {
+                curwalk = 0;
+            }
+        }
 	}
 
 }

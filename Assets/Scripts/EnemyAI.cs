@@ -23,8 +23,16 @@ public class EnemyAI : MonoBehaviour
 
     bool activated;
 
+    private SpriteRenderer enemysprite;
+    private Sprite[] walksprites;
+    private int curwalk = 1;
+    private float spriteChangeRate = 0.05f;
+    private float spriteChangeTime = 0f;
+
     void Start()
     {
+        enemysprite = gameObject.GetComponent<SpriteRenderer>();
+        walksprites = Resources.LoadAll<Sprite>("Sprites/PNG/characters/footsoldier/Walk");
         activated = false;
     }
 
@@ -106,6 +114,19 @@ public class EnemyAI : MonoBehaviour
         if(activated)
         {
             transform.Translate(velocity * Time.deltaTime);
+        }
+
+        if (Time.time > spriteChangeTime)
+        {
+            enemysprite.sprite = walksprites[6 + curwalk];
+
+            spriteChangeTime = Time.time + spriteChangeRate;
+            curwalk++;
+
+            if (curwalk > 2)
+            {
+                curwalk = 0;
+            }
         }
 
     }
