@@ -16,6 +16,7 @@ public class EnemyShooting : MonoBehaviour
 
     public float fireRate = 0.05f;
     private float fireTime = 0f;
+    private int burstcount = 0;
 
     void Start()
     {
@@ -79,12 +80,18 @@ public class EnemyShooting : MonoBehaviour
 
     void LateUpdate()
     {
+        if(burstcount > 3)
+        {
+            fireTime += 1;
+        }
+
         if (Time.time > fireTime)
         {
             fireTime = Time.time + fireRate;
             bulletClone = Instantiate(bullet, transform.position, Quaternion.identity) as GameObject; //Instantiate the bullet as a GameObject
             bulletPrefab = bulletClone.GetComponent<Rigidbody2D>();
             bulletPrefab.velocity = (dir * 10); //Take the rigidbody of the bullet clone and add force to it
+            burstcount++;
         }
     }
 

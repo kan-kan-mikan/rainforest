@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: fe524942fd926e747a8be45ce81b0fea
-timeCreated: 1489538815
+timeCreated: 1490063160
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -76,6 +76,19 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 359
+        y: 280
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: M484BulletCollection2_1
+      rect:
+        serializedVersion: 2
+        x: 412
         y: 280
         width: 19
         height: 19
