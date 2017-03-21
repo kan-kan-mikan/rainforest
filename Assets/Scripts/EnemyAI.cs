@@ -112,7 +112,7 @@ public class EnemyAI : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D coll)
 	{
-        if(coll.gameObject.tag == "Projectile" || coll.gameObject.tag == "Out of Bounds")
+        if(activated && (coll.gameObject.tag == "Projectile" || coll.gameObject.tag == "Out of Bounds"))
         {
             Destroy(gameObject);
         }
