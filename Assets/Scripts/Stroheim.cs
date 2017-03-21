@@ -4,6 +4,9 @@ using System.Collections;
 public class Stroheim : MonoBehaviour
 {
 
+    public AudioSource hitsound;
+    public AudioClip fire;
+
     public GameObject bullet;
     private GameObject bulletClone;
     private Rigidbody2D bulletPrefab;
@@ -26,6 +29,8 @@ public class Stroheim : MonoBehaviour
 
     public static int hitcount = 0;
 
+    int curspr = 0;
+
     void Start()
     {
         enemysprite = gameObject.GetComponent<SpriteRenderer>();
@@ -33,6 +38,7 @@ public class Stroheim : MonoBehaviour
         activated = false;
         faceRight = false;
         Player = GameObject.FindWithTag("Player");
+        hitsound.clip = fire;
     }
 
     void FixedUpdate()
@@ -58,22 +64,21 @@ public class Stroheim : MonoBehaviour
         {
             dir = Vector2.right;
             faceRight = true;
-            enemysprite.sprite = sprites[0];
             x = 1.5f;
             y = -0.1f;
+            enemysprite.sprite = sprites[4];
         }
         else if (angle > 23 && angle <= 67)
         {
             dir = new Vector2(1, 1);
             faceRight = true;
-            enemysprite.sprite = sprites[2];
             x = 1.2f;
             y = 1.2f;
+            enemysprite.sprite = sprites[4];
         }
         else if (angle > 67 && angle <= 113)
         {
             dir = Vector2.up;
-            enemysprite.sprite = sprites[2];
 
             if (faceRight)
             {
@@ -85,39 +90,39 @@ public class Stroheim : MonoBehaviour
                 x = -0.8f;
                 y = 1.2f;
             }
-
+            enemysprite.sprite = sprites[4];
         }
         else if (angle > 113 && angle <= 157)
         {
             dir = new Vector2(-1, 1);
             faceRight = false;
-            enemysprite.sprite = sprites[2];
             x = -1.2f;
             y = 1.2f;
+            enemysprite.sprite = sprites[4];
         }
         else if (angle > 157 || angle <= -158)
         {
             dir = Vector2.left;
             faceRight = false;
-            enemysprite.sprite = sprites[0];
             x = -1.5f;
             y = -0.1f;
+            enemysprite.sprite = sprites[4];
         }
         else if (angle > -158 && angle <= -112)
         {
             dir = new Vector2(-1, -1);
             faceRight = false;
-            enemysprite.sprite = sprites[1];
             x = -1.2f;
             y = -1.2f;
+            enemysprite.sprite = sprites[4];
         }
         else if (angle > -68 && angle <= -22)
         {
             dir = new Vector2(1, -1);
             faceRight = true;
-            enemysprite.sprite = sprites[1];
             x = 1.2f;
             y = -1.2f;
+            enemysprite.sprite = sprites[4];
         }
     }
 
@@ -135,20 +140,9 @@ public class Stroheim : MonoBehaviour
             bulletClone = Instantiate(bullet, transform.position + new Vector3(x, y), Quaternion.identity) as GameObject; //Instantiate the bullet as a GameObject
             bulletPrefab = bulletClone.GetComponent<Rigidbody2D>();
             bulletPrefab.velocity = (dir.normalized) * 10; //Take the rigidbody of the bullet clone and add force to it
+            enemysprite.sprite = sprites[5];
             burstcount++;
-        }
-    }
-
-    void OnCollisionEnter2D(Collision2D coll)
-    {
-        if (activated && coll.gameObject.tag == "Projectile")
-        {
-            hitcount++;
-
-            if (hitcount > 10)
-            {
-                Destroy(gameObject);
-            }  
+            hitsound.Play();
         }
     }
 

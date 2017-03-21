@@ -3,7 +3,10 @@ using System.Collections;
 
 public class Shooting : MonoBehaviour
 {
-	//Make child gameobject of Player and attach this script to it
+    //Make child gameobject of Player and attach this script to it
+
+    public AudioSource sound;
+    public AudioClip pew;
 
 	public GameObject bullet; 
 	private GameObject bulletClone;
@@ -291,6 +294,8 @@ public class Shooting : MonoBehaviour
 			bulletClone = Instantiate (bullet, transform.position + new Vector3(x,y), Quaternion.identity) as GameObject; //Instantiate the bullet as a GameObject
 			bulletPrefab = bulletClone.GetComponent<Rigidbody2D>(); 
 			bulletPrefab.velocity = (dir * 10); //Take the rigidbody of the bullet clone and add force to it
+            sound.clip = pew;
+            sound.Play();
 		}
 
         if (Player.grounded && Time.time > spriteChangeTime)

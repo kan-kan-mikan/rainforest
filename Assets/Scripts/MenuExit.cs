@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MenuExit : MonoBehaviour {
+public class MenuExit : MonoBehaviour
+{
 
-	public void onMouseUp()
+    public void onMouseUp()
     {
 
         Application.Quit();

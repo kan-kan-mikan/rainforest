@@ -242,7 +242,7 @@ public class Player : MonoBehaviour
             }
             else if (scene.name == "Industrial")
             {
-                SceneManager.LoadScene("Level Select");
+                SceneManager.LoadScene("End");
             }
         }
     }
