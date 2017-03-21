@@ -5,6 +5,12 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
 
+    public AudioSource music;
+    public AudioSource sound;
+    public AudioClip win;
+    private float wintime;
+    private bool won;
+
     public static float acceleration = 5f;
     public static float maxSpeed = 5f;
     public float gravity = 1f;
@@ -213,18 +219,16 @@ public class Player : MonoBehaviour
     {
         //applies movement with Time.deltaTime being time since last frame
         transform.Translate(velocity * Time.deltaTime);
-    }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.gameObject.tag == "End of Stage")
+        if (won && Time.time > wintime + 2)
         {
+            wintime = 0;
             Scene scene = SceneManager.GetActiveScene();
-            if(scene.name == "Mountain")
+            if (scene.name == "Mountain")
             {
                 SceneManager.LoadScene("Forest");
             }
-            else if(scene.name == "Forest")
+            else if (scene.name == "Forest")
             {
                 SceneManager.LoadScene("City");
             }
@@ -240,6 +244,18 @@ public class Player : MonoBehaviour
             {
                 SceneManager.LoadScene("Level Select");
             }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(!won && collision.gameObject.tag == "End of Stage")
+        {
+            won = true;
+            sound.clip = win;
+            sound.Play();
+            wintime = Time.time;
+            music.Stop();
         }
     }
 
