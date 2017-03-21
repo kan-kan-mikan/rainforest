@@ -10,8 +10,6 @@ public class Player : MonoBehaviour
     public float maxfall = 12f;
     public float jump = 18f;
 
-    int layerMask;
-
     Rect box;
 
     public static Vector2 velocity;
@@ -22,11 +20,6 @@ public class Player : MonoBehaviour
     int horizontalRays = 6;
     int verticalRays = 4;
     float margin = 0.1f;
-
-    void Start()
-    {
-        layerMask = LayerMask.NameToLayer("Collisions");
-    }
 
     void FixedUpdate()
     {

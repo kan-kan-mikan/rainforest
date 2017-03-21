@@ -7,9 +7,9 @@ public class Bullet : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag == "Enemy")
+        if (col.gameObject.tag == "Enemy" || col.gameObject.tag == "Out of Bounds")
         {
-            Debug.Log("Bullet Hit Enemy"); //Off screen bullet killing zones are counted as enemies for ease of purpose
+            Debug.Log("Bullet Hit Enemy");
             Destroy(gameObject);
         }
 
