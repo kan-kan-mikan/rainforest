@@ -236,7 +236,7 @@ public class Player : MonoBehaviour
             {
                 SceneManager.LoadScene("Cyberpunk");
             }
-            else if (scene.name == "City")
+            else if (scene.name == "Cyberpunk")
             {
                 SceneManager.LoadScene("Industrial");
             }
